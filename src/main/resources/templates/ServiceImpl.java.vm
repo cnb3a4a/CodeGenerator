@@ -1,0 +1,40 @@
+package ${package.servicePackage};
+
+import ${package.mapperPackage}.${package.className}Mapper;
+import ${package.entityPackage}.${package.className};
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.Serializable;
+import java.util.List;
+
+@Service
+public class ${package.className}ServiceImpl implements ${package.className}Service {
+    @Autowired
+    ${package.className}Mapper ${package.objName}Mapper;
+
+    @Override
+    public List<${package.className}> findAll() {
+        return ${package.objName}Mapper.findAll();
+    }
+
+    @Override
+    public ${package.className} findBy${table.pkCapitalizeName}(Serializable ${table.pkName}) {
+        return ${package.objName}Mapper.findById(${table.pkName});
+    }
+
+    @Override
+    public int insert(${package.className} ${package.objName}) {
+        return ${package.objName}Mapper.insert(${package.objName});
+    }
+
+    @Override
+    public int update(${package.className} ${package.objName}) {
+        return ${package.objName}Mapper.update(${package.objName});
+    }
+
+    @Override
+    public int delete(Serializable ${table.pkName}) {
+        return ${package.objName}Mapper.delete(${table.pkName});
+    }
+}

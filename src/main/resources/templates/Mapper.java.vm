@@ -1,0 +1,48 @@
+package ${package.mapperPackage};
+
+import java.util.List;
+import java.io.Serializable;
+import org.apache.ibatis.annotations.Mapper;
+import ${package.entityPackage}.${package.className};
+
+@Mapper
+public interface ${package.className}Mapper {
+
+    /**
+     * 查询所有记录
+     *
+     * @return 返回集合，没有返回空List
+     */
+    List<${package.className}> findAll();
+
+
+    /**
+     * 根据主键查询
+     *
+     * @return 返回记录，没有返回null
+     */
+     ${package.className} findBy${table.pkCapitalizeName}(Serializable ${table.pkName});
+
+    /**
+     * 新增，插入所有字段
+     *
+     * @return 返回影响行数
+     */
+    int insert(${package.className} ${package.objName});
+
+
+    /**
+     * 修改，修改所有字段
+     *
+     * @return 返回影响行数
+     */
+    int update(${package.className} ${package.objName});
+
+    /**
+     * 删除记录
+     *
+     * @return 返回影响行数
+     */
+    int delete(Serializable ${table.pkName});
+
+}

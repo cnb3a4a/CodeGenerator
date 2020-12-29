@@ -1,0 +1,39 @@
+package ${package.entityPackage};
+
+public class ${package.className} implements Serializable {
+
+#foreach($column in ${table.columns})
+    private ${column.javaType} ${column.propertyName};
+#end
+## ----------  END 字段循环遍历  ----------
+
+
+#foreach($column in ${table.columns})
+    #if(${column.propertyType.equals("boolean")})
+        #set($getPrefix="is")
+    #else
+        #set($getPrefix="get")
+    #end
+
+    public ${column.javaType} ${getPrefix}${column.capitalizeName}() {
+        return ${column.propertyName};
+    }
+    public void set${column.capitalizeName}(${column.javaType} ${column.propertyName}) {
+        this.${column.propertyName} = ${column.propertyName};
+    }
+#end
+
+
+    @Override
+    public String toString() {
+        return "${package.className}{" +
+            #foreach($column in ${table.columns})
+                #if($!{foreach.index}==0)
+                "${column.columnName}=" + ${column.columnName} +
+                #else
+                ", ${column.columnName}=" + ${column.columnName} +
+                #end
+            #end
+        "}";
+    }
+}

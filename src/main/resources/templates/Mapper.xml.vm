@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${package.mapperPackage}.${package.className}Mapper">
+    <resultMap id="baseResultMap" type="${package.entityPackage}.${package.className}">
+        #foreach($column in ${table.columns})
+            <result column="${column.columnName}" property="${column.propertyName}" />
+        #end
+    </resultMap>
+
+    <sql id="baseColumns">
+        #foreach($column in ${table.columns})
+            #if($foreach.count > 1)         ,#elseif($foreach.count == 1)         #end ${column.columnName}
+        #end
+    </sql>
+
+    <!-- 查询全部 -->
+    <select id="findAll" resultMap="baseResultMap">
+        SELECT
+        <include refid="baseColumns" />
+        FROM ${table.tableName}
+    </select>
+
+    <!-- 根据主键获取单条记录 -->
+    <select id="findBy${table.pkCapitalizeName}" resultMap="baseResultMap" parameterType="${table.pkType}">
+        SELECT
+        <include refid="baseColumns" />
+        FROM ${table.tableName}
+        WHERE ${table.pkDBName} = #{${table.pkName}}
+    </select>
+
+    <!-- 插入全部字段 -->
+    <insert id="insert" parameterType="${package.entityPackage}.${package.className}"
+            #foreach($column in ${table.columns})
+                #if($column.isPK)
+                    keyProperty="${column.propertyName}" keyColumn="${column.columnName}"
+                #end
+            #end
+            useGeneratedKeys="true">
+        INSERT INTO ${table.tableName}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #foreach($column in ${table.columns})
+                #if(!${column.isAutoIncrement})
+                    ${column.columnName},
+                #end
+            #end
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            #foreach($column in ${table.columns})
+                #if(!${column.isAutoIncrement})
+                    #{${column.propertyName}},
+                #end
+            #end
+        </trim>
+    </insert>
+
+    <!-- 更新,更新全部字段 -->
+    <update id="update" parameterType="${package.entityPackage}.${package.className}">
+        UPDATE ${table.tableName}
+        <set>
+            #foreach($column in ${table.columns})
+                #if(!${column.isPk})
+                    ${column.columnName}=#{${column.propertyName}},
+                #end
+            #end
+        </set>
+        WHERE ${table.pkDBName} = #{${table.pkName}}
+    </update>
+
+    <!-- 根据主键删除记录 -->
+    <delete id="delete" parameterType="${table.pkType}">
+        DELETE FROM ${table.tableName}
+        WHERE ${table.pkDBName} = #{${table.pkName}}
+	</delete>
+
+</mapper>
